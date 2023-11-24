@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "shop-backend"
+    ports:
+      - "8001:8000"
+    restart: always
+    command: "python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    environment:
+      - SECRET_KEY=django-insecure-b3-8gdq=r2h=##d+rgu9sg&hr0po%!3^89f#9p-vx+r&201u=k
+      - DEBUG=1
+      - ALLOWED_HOSTS=0.0.0.0|127.0.0.1
+      - POSTGRES_DB=video_game_shop
+      - POSTGRES_USER=admin1
+      - POSTGRES_PASSWORD=qwerty
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.3-alpine
+    container_name: "shop-db"
+    hostname: db
+    restart: always
+    volumes:
+      - .:/data/db/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=video_game_shop
+      - POSTGRES_USER=admin1
+      - POSTGRES_PASSWORD=qwerty
+      - POSTGRES_HOST_AUTH_METHOD=trust
