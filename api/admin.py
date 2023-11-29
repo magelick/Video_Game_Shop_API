@@ -18,7 +18,7 @@ class GameAdmin(admin.ModelAdmin):
     list_editable = ("price",)
     search_fields = ("title",)
     prepopulated_fields = {
-        "slug": ("title", "price", "platform")
+        "slug": ("title", "price", )
     }
 
 
