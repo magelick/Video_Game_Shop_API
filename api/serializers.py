@@ -3,17 +3,17 @@ from rest_framework import serializers
 from .models import Platform, Game, Device, Souvenir
 
 
-class PlatformSerializer(serializers.HyperlinkedModelSerializer):
+class PlatformSerializer(serializers.ModelSerializer):
     """
     Серилизатор модели Платформ со всеми полями
     """
 
     class Meta:
         model = Platform
-        fields = ("id", "title", "slug", "information")
+        fields = "__all__"
 
 
-class GameSerializer(serializers.HyperlinkedModelSerializer):
+class GameSerializer(serializers.ModelSerializer):
     """
     Серилизатор модели Игр со всеми полями
     """
@@ -21,10 +21,10 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Game
-        fields = ("id", "title", "slug", "price", "platform")
+        fields = "__all__"
 
 
-class DeviceSerializer(serializers.HyperlinkedModelSerializer):
+class DeviceSerializer(serializers.ModelSerializer):
     """
     Серилизатор модели Игр со всеми полями
     """
@@ -32,7 +32,7 @@ class DeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Device
-        fields = ("id", "title", "slug", "price", "platform")
+        fields = "__all__"
 
 
 class SouvenirSerializer(serializers.ModelSerializer):
@@ -43,4 +43,4 @@ class SouvenirSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Souvenir
-        fields = ("title", "slug", "information", "price", "game")
+        fields = "__all__"
