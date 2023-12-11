@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils.text import slugify
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -18,9 +19,9 @@ class PlatformList(APIView):
     def post(self, request):
         platform = Platform.objects.create(
             title=request.data["title"],
-            slug=request.data["slug"],
             information=request.data["information"]
         )
+        platform.slug = slugify(request.data["title"])
         serializer = PlatformSerializer(platform, many=False, context={"request": request})
         return Response(serializer.data)
 
@@ -63,9 +64,10 @@ class GameList(APIView):
             title=request.data["title"],
             slug=request.data["slug"],
             price=request.data["price"],
-            platform=request.data["platform"]
         )
-        serializer = GameSerializer(game, many=True, context={"request": request})
+        platforms = Platform.objects.filter(id__in=request.data["platform"])
+        game.platform.set(platforms)
+        serializer = GameSerializer(game, context={"request": request})
         return Response(serializer.data)
 
 
@@ -127,14 +129,15 @@ class DeviceList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        platform = Platform.objects.get(id=request.data["platform"])
         device = Device.objects.create(
             title=request.data["title"],
             slug=request.data["slug"],
             information=request.data["information"],
             price=request.data["price"],
-            platform=request.data["platform"]
+            platform=platform
         )
-        serializer = DeviceSerializer(device, many=True, context={"request": request})
+        serializer = DeviceSerializer(device, context={"request": request})
         return Response(serializer.data)
 
 
@@ -184,14 +187,15 @@ class SouvenirList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        game = Game.objects.get(id=request.data["game"])
         souvenir = Souvenir.objects.create(
             title=request.data["title"],
             slug=request.data["slug"],
             information=request.data["information"],
             price=request.data["price"],
-            game=request.data["game"]
+            game=game
         )
-        serializer = SouvenirSerializer(souvenir, many=True, context={"request": request})
+        serializer = SouvenirSerializer(souvenir, context={"request": request})
         return Response(serializer.data)
 
 
